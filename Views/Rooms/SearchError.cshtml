@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewBag.Title = "SearchError";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .btn-primary {
+        cursor: pointer;
+        background-color: rgb(244, 154, 153);
+        border: none;
+    }
+
+        .btn-primary:hover {
+            cursor: pointer;
+            background-color: #ee7c72;
+            border: none;
+        }
+</style>
+<div class="container col-11" style="margin-top:150px;">
+    <h3 style="font-weight:700">No results</h3>
+    <p>Sorry, no results were found. Please try again</p>
+    <button type="submit" class="btn btn-primary" onclick="window.location.href = '@Url.Action("Index", "Rooms")';">Search Again</button>
+    <hr />
+</div>

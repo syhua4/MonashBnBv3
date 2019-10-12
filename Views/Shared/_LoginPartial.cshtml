@@ -1,0 +1,66 @@
+﻿<style>
+    .navbar.navbar-fixed-top {
+        overflow: hidden;
+        /*background-color:white;*/
+        position: fixed;
+        top: 0;
+        width: 100%;
+        font-family: 'Roboto';
+        letter-spacing: 1px;
+        border-bottom-color: transparent;
+    }
+
+    .ml-auto a {
+        color: black;
+        display: inline-block;
+        padding: 8px 15px 8px 15px;
+        white-space: nowrap;
+        margin-right: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+    }
+</style>
+@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                @*<ul class="navbar navbar-fixed-top navbar-right">*@
+                <li>
+                    @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+                </li>
+                <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+            </ul>
+        </div>
+    }
+}
+else
+{
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                @Html.ActionLink("Manage User", "xxx", "xxx", routeValues: null, htmlAttributes: new { id = "registerLink" })
+            </li>
+            <li class="nav-item active">
+                @Html.ActionLink("Manage Hotel & Room", "xxx", "xxx", routeValues: null, htmlAttributes: new { id = "registerLink" })
+            </li>
+            <li class="nav-item active">
+                @Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })
+            </li>
+            <li class="nav-item">
+                @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+            </li>
+        </ul>
+    </div>
+    @*<div class="nav navbar-nav navbar-right">
+            @Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })
+            @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+        </div>*@
+}
+

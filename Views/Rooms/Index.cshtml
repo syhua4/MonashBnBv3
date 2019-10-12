@@ -1,0 +1,121 @@
+﻿@model IEnumerable<MonashBnBv3.Models.Room>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    <link href="~/Content/bootstrap-datepicker3.css" rel="stylesheet" />
+}
+
+<script src="~/Scripts/bootstrap-datepicker.js"></script>
+<style>
+    body, html {
+        width: 100%;
+        height: 100%;
+    }
+
+    .hero-image {
+        background-image: url(https://stmed.net/sites/default/files/santorini-wallpapers-28869-8896365.jpg);
+        height: 50%;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: relative;
+        min-height: 700px;
+    }
+
+        .hero-image .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .hero-image .welcome {
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .hero-image .search-wrapper {
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 30px;
+            color: white;
+            margin: 0 auto;
+        }
+
+    .btn-primary {
+        cursor: pointer;
+        background-color: rgb(244, 154, 153);
+        border: none;
+    }
+
+        .btn-primary:hover {
+            cursor: pointer;
+            background-color: #ee7c72;
+            border: none;
+        }
+
+    .btn-icon .icon {
+        position: absolute;
+        right: 0;
+        display: block;
+    }
+</style>
+<div class="hero-image">
+    <div class="container padding">
+        <div class="row welcome text-center">
+            <div class="col-12">
+                <h1>Book unique places to stay and things to do</h1>
+            </div>
+        </div>
+        <div class="search-wrapper">
+            @using (Html.BeginForm("Search", "Rooms", FormMethod.Post))
+            {
+                <div class="row form-group">
+                    <div class="col-12">
+                        @Html.Label("WHERE DO YOU WANT TO GO?", htmlAttributes: new { @class = "control-label" })
+                        @Html.Editor("destination", new { htmlAttributes = new { @class = "form-control" } })
+
+                    </div>
+                </div>
+                <br />
+                <div class="row form-group">
+                    <div class="col-md-4">
+                        @Html.Label("CHECK-IN", htmlAttributes: new { @class = "control-label" })
+                        @Html.Editor("checkInDate", new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.Label("CHECK-OUT", htmlAttributes: new { @class = "control-label" })
+                        @Html.Editor("checkOutDate", new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.Label("GUESTS", htmlAttributes: new { @class = "control-label" })
+                        @Html.Editor("guestNumber", new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+                <br />
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6 offset-sm-3 col-md-8 offset-md-2 text-center">
+                            <button type="submit" class="btn btn-block btn-primary">
+                                SEARCH&nbsp;
+                                <span class="icon">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+            }
+        </div>
+
+    </div>
+</div>
+<script>
+    $('#checkInDate, #checkOutDate').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        todayHighlight: true
+    });
+</script>

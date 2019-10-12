@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<style>
+</style>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Niconne|Roboto&display=swap" rel="stylesheet">
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    @* This is for the mapbox map. *@
+    <script src='https://api.mapbox.com/mapbox-gl-js/v0.47.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v0.47.0/mapbox-gl.css' rel='stylesheet' />
+    @*This is used for the Geocoding Mapbox API*@
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-glgeocoder.min.js'></script>
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-glgeocoder/v2.2.0/mapbox-gl-geocoder.css' type='text/css' />
+    <link href="~/Content/font-awesome.css" rel="stylesheet" />
+    @Styles.Render("~/bundles/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+
+<body style="font-family:'Roboto'">
+    <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top" style="box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.075);">
+        <div class="container-fluid">
+            <a href="@Url.Action("Index", "Rooms")" class="navbar-brand" style="font-family:'Niconne',cursive; font-size:25px;">MonashBnB</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        @Html.Partial("_LoginPartial")
+        @*<div class="collapse navbar-collapse" id="navbarResponsive">
+
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link text-nowrap" href="@Url.Action("Login", "Account")">LOG IN</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Register", "Account")">REGISTER</a>
+                    </li>
+                </ul>
+            </div>*@
+    </nav>
+    @RenderBody()
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

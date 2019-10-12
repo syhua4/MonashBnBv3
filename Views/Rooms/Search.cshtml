@@ -1,0 +1,182 @@
+﻿@model IEnumerable<MonashBnBv3.Models.Room>
+
+@{
+    ViewBag.Title = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .navbar2 {
+        overflow: hidden;
+        background-color: #333;
+        position: fixed; /* Set the navbar to fixed position */
+        top: 0; /* Position the navbar at the top of the page */
+        width: 100%; /* Full width */
+    }
+
+    .mapboxgl-map {
+        position: fixed;
+        margin-top: 64px;
+        top: 5px;
+        bottom: 0;
+        width: 40%;
+    }
+
+    .search-again {
+        position: fixed;
+        margin-top: 64px;
+        top: 5px;
+        bottom: 0;
+        width: 38%;
+        z-index: 999;
+        left: 3px;
+    }
+
+    .container2 {
+        padding-left: 40px;
+        position: absolute;
+        right: 0;
+        top: 64px;
+        width: 60%;
+    }
+
+    .hotel-box {
+        padding: 5px;
+        border: 1px solid #e9ecef;
+        margin-bottom: 25px;
+        border-radius: 3px;
+        top: 5px;
+    }
+
+    p {
+        margin-top: 0;
+        margin-bottom: 60px;
+    }
+
+    .hotel-info {
+        top: 5px;
+    }
+
+    .btn-primary {
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.36);
+        border: none;
+    }
+
+        .btn-primary:hover {
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+        }
+
+    .btn-icon .icon {
+        position: absolute;
+        right: 0;
+        display: block;
+    }
+
+    .result-text {
+        font-size: 20px;
+        margin-top: 20px;
+        font-weight: 700;
+    }
+</style>
+<div class="search-again">
+    <div class="row">
+
+        <button type="submit" class="btn btn-primary">
+            SEARCH AGAIN&nbsp;
+            <span class="icon">
+                <i class="fa fa-search"></i>
+            </span>
+        </button>
+
+    </div>
+</div>
+<div id="map" class="mapboxgl-map sticky"></div>
+<div class="container2 float-md-right col-12">
+    <div class="result-text">@ViewBag.FoundResults</div>
+    @foreach (var item in Model)
+    {
+        <div class="hotel-box col-12 row">
+            <div class="hotel-photo col-4">
+                <a href="garden-single.html" title="">
+                    <img src="upload/garden_sq_01.jpg" alt="" class="img-fluid">
+                    <div class="hovereffect"></div>
+                </a>
+            </div><!-- end media -->
+
+            <div class="hotel-info col-8">
+                <span class="bg-aqua"><a href="garden-category.html" title="">Indoor</a></span>
+                <h4><a href="garden-single.html" title=""> @Html.DisplayFor(modelItem => item.Hotel.hotelName)</a></h4>
+                <p>@Html.DisplayFor(modelItem => item.Hotel.hotelDesc)</p>
+                <small><a href="garden-category.html" title=""><i class="fa fa-eye"></i> 1887</a></small>
+                <small><a href="garden-single.html" title="">11 July, 2017</a></small>
+                <small><a href="#" title="">by Matilda</a></small>
+            </div><!-- end meta -->
+        </div>
+    }
+</div>
+
+
+
+
+<table class="table" hidden>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Hotel.hotelName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Hotel.hotelDesc)
+        </th>
+        <th hidden>
+            @Html.DisplayNameFor(model => model.Hotel.hotelLatitude)
+        </th>
+        <th hidden>
+            @Html.DisplayNameFor(model => model.Hotel.hotelLongitude)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RoomType.roomTypeName)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.roomPricePerNight)
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr class="coordinates">
+            <td class="description">
+                @Html.DisplayFor(modelItem => item.Hotel.hotelName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Hotel.hotelAddress)
+            </td>
+            <td class="latitude" hidden>
+                @Html.DisplayFor(modelItem => item.Hotel.hotelLatitude)
+            </td>
+            <td class="longitude" hidden>
+                @Html.DisplayFor(modelItem => item.Hotel.hotelLongitude)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RoomType.roomTypeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.roomPricePerNight)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Hotel.imageId)
+            </td>
+        </tr>
+
+    }
+
+</table>
+@section Scripts {
+    @Scripts.Render("~/bundles/mapbox")
+}
