@@ -40,7 +40,7 @@ namespace MonashBnBv3
             }
             var store = new UserStore<ApplicationUser>(context);
             var manager = new ApplicationUserManager(store);
-            var user = new ApplicationUser() { Email = "admin@gmail.com", UserName = "admin" };
+            var user = new ApplicationUser() { Email = "admin@gmail.com", UserName = "admin", LastName ="admin", FirstName = "admin"};
             IdentityResult checkUser = manager.Create(user, "admin_1234");
             if (checkUser.Succeeded)
             {

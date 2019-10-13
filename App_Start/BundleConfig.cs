@@ -23,7 +23,7 @@ namespace MonashBnBv3
                       "~/Scripts/bootstrap.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/mapbox").Include(
-                        "~/Scripts/location.js"));
+                      "~/Scripts/location.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

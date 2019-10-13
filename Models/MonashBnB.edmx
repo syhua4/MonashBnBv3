@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="MonashBnB_Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="__MigrationHistory">
           <Key>
             <PropertyRef Name="MigrationId" />
@@ -65,6 +65,9 @@
           <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
           <Property Name="AccessFailedCount" Type="int" Nullable="false" />
           <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="128" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="128" />
+          <Property Name="mailId" Type="int" />
         </EntityType>
         <EntityType Name="Hotels">
           <Key>
@@ -86,6 +89,14 @@
           <Property Name="imageId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="imagePath" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="imageName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Mails">
+          <Key>
+            <PropertyRef Name="mailId" />
+          </Key>
+          <Property Name="mailId" Type="int" Nullable="false" />
+          <Property Name="mailSentDate" Type="datetime" />
+          <Property Name="mailSelected" Type="bit" />
         </EntityType>
         <EntityType Name="Reservations">
           <Key>
@@ -232,6 +243,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_sendMail">
+          <End Role="Mails" Type="Self.Mails" Multiplicity="0..1" />
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Mails">
+              <PropertyRef Name="mailId" />
+            </Principal>
+            <Dependent Role="AspNetUsers">
+              <PropertyRef Name="mailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_userId">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
           <End Role="Reservations" Type="Self.Reservations" Multiplicity="*" />
@@ -244,7 +267,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="MonashBnB_ModelStoreContainer">
+        <EntityContainer Name="ModelStoreContainer">
           <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
@@ -253,6 +276,7 @@
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Hotels" EntityType="Self.Hotels" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Images" EntityType="Self.Images" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Mails" EntityType="Self.Mails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Reservations" EntityType="Self.Reservations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Rooms" EntityType="Self.Rooms" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RoomTypes" EntityType="Self.RoomTypes" Schema="dbo" store:Type="Tables" />
@@ -292,6 +316,10 @@
             <End Role="RoomTypes" EntitySet="RoomTypes" />
             <End Role="Rooms" EntitySet="Rooms" />
           </AssociationSet>
+          <AssociationSet Name="FK_sendMail" Association="Self.FK_sendMail">
+            <End Role="Mails" EntitySet="Mails" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
           <AssociationSet Name="FK_userId" Association="Self.FK_userId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="Reservations" EntitySet="Reservations" />
@@ -300,7 +328,7 @@
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="MonashBnB_Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="C__MigrationHistory">
           <Key>
             <PropertyRef Name="MigrationId" />
@@ -356,8 +384,12 @@
           <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
           <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
           <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="mailId" Type="Int32" />
           <NavigationProperty Name="AspNetUserClaims" Relationship="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
           <NavigationProperty Name="AspNetUserLogins" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
+          <NavigationProperty Name="Mail" Relationship="Self.FK_sendMail" FromRole="AspNetUsers" ToRole="Mails" />
           <NavigationProperty Name="Reservations" Relationship="Self.FK_userId" FromRole="AspNetUsers" ToRole="Reservations" />
           <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
         </EntityType>
@@ -373,9 +405,9 @@
           <Property Name="hotelLatitude" Type="Decimal" Precision="10" Scale="8" Nullable="false" />
           <Property Name="hotelLongitude" Type="Decimal" Precision="11" Scale="8" Nullable="false" />
           <Property Name="imageId" Type="Int32" />
+          <NavigationProperty Name="Rooms" Relationship="Self.FK_hotelId" FromRole="Hotels" ToRole="Rooms" />
           <NavigationProperty Name="Image" Relationship="Self.FK_imageId" FromRole="Hotels" ToRole="Images" />
           <NavigationProperty Name="Reservations" Relationship="Self.FK_reserve_hotelId" FromRole="Hotels" ToRole="Reservations" />
-          <NavigationProperty Name="Rooms" Relationship="MonashBnB_Model.FK_hotelId" FromRole="Hotel" ToRole="Room" />
         </EntityType>
         <EntityType Name="Image">
           <Key>
@@ -385,6 +417,15 @@
           <Property Name="imagePath" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="imageName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Hotels" Relationship="Self.FK_imageId" FromRole="Images" ToRole="Hotels" />
+        </EntityType>
+        <EntityType Name="Mail">
+          <Key>
+            <PropertyRef Name="mailId" />
+          </Key>
+          <Property Name="mailId" Type="Int32" Nullable="false" />
+          <Property Name="mailSentDate" Type="DateTime" Precision="3" />
+          <Property Name="mailSelected" Type="Boolean" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_sendMail" FromRole="Mails" ToRole="AspNetUsers" />
         </EntityType>
         <EntityType Name="Reservation">
           <Key>
@@ -409,9 +450,9 @@
           <Property Name="roomPricePerNight" Type="Double" Nullable="false" />
           <Property Name="hotelId" Type="Int32" Nullable="false" />
           <Property Name="roomTypeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Hotel" Relationship="Self.FK_hotelId" FromRole="Rooms" ToRole="Hotels" />
           <NavigationProperty Name="Reservations" Relationship="Self.FK_roomId" FromRole="Rooms" ToRole="Reservations" />
           <NavigationProperty Name="RoomType" Relationship="Self.FK_roomTypeId" FromRole="Rooms" ToRole="RoomTypes" />
-          <NavigationProperty Name="Hotel" Relationship="MonashBnB_Model.FK_hotelId" FromRole="Room" ToRole="Hotel" />
         </EntityType>
         <EntityType Name="RoomType">
           <Key>
@@ -450,6 +491,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_sendMail">
+          <End Role="Mails" Type="Self.Mail" Multiplicity="0..1" />
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Mails">
+              <PropertyRef Name="mailId" />
+            </Principal>
+            <Dependent Role="AspNetUsers">
+              <PropertyRef Name="mailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_userId">
           <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1" />
           <End Role="Reservations" Type="Self.Reservation" Multiplicity="*" />
@@ -459,6 +512,18 @@
             </Principal>
             <Dependent Role="Reservations">
               <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hotelId">
+          <End Role="Hotels" Type="Self.Hotel" Multiplicity="1" />
+          <End Role="Rooms" Type="Self.Room" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Hotels">
+              <PropertyRef Name="hotelId" />
+            </Principal>
+            <Dependent Role="Rooms">
+              <PropertyRef Name="hotelId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -522,6 +587,7 @@
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUser" />
           <EntitySet Name="Hotels" EntityType="Self.Hotel" />
           <EntitySet Name="Images" EntityType="Self.Image" />
+          <EntitySet Name="Mails" EntityType="Self.Mail" />
           <EntitySet Name="Reservations" EntityType="Self.Reservation" />
           <EntitySet Name="Rooms" EntityType="Self.Room" />
           <EntitySet Name="RoomTypes" EntityType="Self.RoomType" />
@@ -533,9 +599,17 @@
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
           </AssociationSet>
+          <AssociationSet Name="FK_sendMail" Association="Self.FK_sendMail">
+            <End Role="Mails" EntitySet="Mails" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
           <AssociationSet Name="FK_userId" Association="Self.FK_userId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="Reservations" EntitySet="Reservations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hotelId" Association="Self.FK_hotelId">
+            <End Role="Hotels" EntitySet="Hotels" />
+            <End Role="Rooms" EntitySet="Rooms" />
           </AssociationSet>
           <AssociationSet Name="FK_imageId" Association="Self.FK_imageId">
             <End Role="Images" EntitySet="Images" />
@@ -557,31 +631,15 @@
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
-          <AssociationSet Name="FK_hotelId" Association="MonashBnB_Model.FK_hotelId">
-            <End Role="Hotel" EntitySet="Hotels" />
-            <End Role="Room" EntitySet="Rooms" />
-          </AssociationSet>
         </EntityContainer>
-        <Association Name="FK_hotelId">
-          <End Type="MonashBnB_Model.Hotel" Role="Hotel" Multiplicity="1" />
-          <End Type="MonashBnB_Model.Room" Role="Room" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Hotel">
-              <PropertyRef Name="hotelId" />
-            </Principal>
-            <Dependent Role="Room">
-              <PropertyRef Name="hotelId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="MonashBnB_ModelStoreContainer" CdmEntityContainer="MonashBnB_db">
+        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="MonashBnB_db">
           <EntitySetMapping Name="C__MigrationHistory">
-            <EntityTypeMapping TypeName="MonashBnB_Model.C__MigrationHistory">
+            <EntityTypeMapping TypeName="Model.C__MigrationHistory">
               <MappingFragment StoreEntitySet="__MigrationHistory">
                 <ScalarProperty Name="MigrationId" ColumnName="MigrationId" />
                 <ScalarProperty Name="ContextKey" ColumnName="ContextKey" />
@@ -591,7 +649,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="AspNetRoles">
-            <EntityTypeMapping TypeName="MonashBnB_Model.AspNetRole">
+            <EntityTypeMapping TypeName="Model.AspNetRole">
               <MappingFragment StoreEntitySet="AspNetRoles">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -599,7 +657,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="AspNetUserClaims">
-            <EntityTypeMapping TypeName="MonashBnB_Model.AspNetUserClaim">
+            <EntityTypeMapping TypeName="Model.AspNetUserClaim">
               <MappingFragment StoreEntitySet="AspNetUserClaims">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
@@ -609,7 +667,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="AspNetUserLogins">
-            <EntityTypeMapping TypeName="MonashBnB_Model.AspNetUserLogin">
+            <EntityTypeMapping TypeName="Model.AspNetUserLogin">
               <MappingFragment StoreEntitySet="AspNetUserLogins">
                 <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
                 <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
@@ -618,7 +676,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="AspNetUsers">
-            <EntityTypeMapping TypeName="MonashBnB_Model.AspNetUser">
+            <EntityTypeMapping TypeName="Model.AspNetUser">
               <MappingFragment StoreEntitySet="AspNetUsers">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
@@ -632,11 +690,14 @@
                 <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
                 <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="mailId" ColumnName="mailId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Hotels">
-            <EntityTypeMapping TypeName="MonashBnB_Model.Hotel">
+            <EntityTypeMapping TypeName="Model.Hotel">
               <MappingFragment StoreEntitySet="Hotels">
                 <ScalarProperty Name="hotelId" ColumnName="hotelId" />
                 <ScalarProperty Name="hotelName" ColumnName="hotelName" />
@@ -650,7 +711,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Images">
-            <EntityTypeMapping TypeName="MonashBnB_Model.Image">
+            <EntityTypeMapping TypeName="Model.Image">
               <MappingFragment StoreEntitySet="Images">
                 <ScalarProperty Name="imageId" ColumnName="imageId" />
                 <ScalarProperty Name="imagePath" ColumnName="imagePath" />
@@ -658,8 +719,17 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Mails">
+            <EntityTypeMapping TypeName="Model.Mail">
+              <MappingFragment StoreEntitySet="Mails">
+                <ScalarProperty Name="mailId" ColumnName="mailId" />
+                <ScalarProperty Name="mailSentDate" ColumnName="mailSentDate" />
+                <ScalarProperty Name="mailSelected" ColumnName="mailSelected" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Reservations">
-            <EntityTypeMapping TypeName="MonashBnB_Model.Reservation">
+            <EntityTypeMapping TypeName="Model.Reservation">
               <MappingFragment StoreEntitySet="Reservations">
                 <ScalarProperty Name="reserveId" ColumnName="reserveId" />
                 <ScalarProperty Name="reserveCheckIn" ColumnName="reserveCheckIn" />
@@ -672,7 +742,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Rooms">
-            <EntityTypeMapping TypeName="MonashBnB_Model.Room">
+            <EntityTypeMapping TypeName="Model.Room">
               <MappingFragment StoreEntitySet="Rooms">
                 <ScalarProperty Name="roomId" ColumnName="roomId" />
                 <ScalarProperty Name="roomPricePerNight" ColumnName="roomPricePerNight" />
@@ -682,7 +752,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="RoomTypes">
-            <EntityTypeMapping TypeName="MonashBnB_Model.RoomType">
+            <EntityTypeMapping TypeName="Model.RoomType">
               <MappingFragment StoreEntitySet="RoomTypes">
                 <ScalarProperty Name="roomTypeId" ColumnName="roomTypeId" />
                 <ScalarProperty Name="roomTypeAccomodates" ColumnName="roomTypeAccomodates" />
@@ -690,7 +760,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="AspNetUserRoles" TypeName="MonashBnB_Model.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
+          <AssociationSetMapping Name="AspNetUserRoles" TypeName="Model.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
             <EndProperty Name="AspNetRoles">
               <ScalarProperty Name="Id" ColumnName="RoleId" />
             </EndProperty>

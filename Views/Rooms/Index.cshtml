@@ -3,10 +3,11 @@
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    <link href="~/Content/bootstrap-datepicker3.css" rel="stylesheet" />
 }
-
+<link href="~/Content/bootstrap-datepicker.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
 <script src="~/Scripts/bootstrap-datepicker.js"></script>
+
 <style>
     body, html {
         width: 100%;
@@ -119,3 +120,7 @@
         todayHighlight: true
     });
 </script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+}

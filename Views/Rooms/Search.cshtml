@@ -104,19 +104,19 @@
     {
         <div class="hotel-box col-12 row">
             <div class="hotel-photo col-4">
-                <a href="garden-single.html" title="">
-                    <img src="upload/garden_sq_01.jpg" alt="" class="img-fluid">
-                    <div class="hovereffect"></div>
-                </a>
+                @*<a href="garden-single.html" title="">
+                        <img src="upload/garden_sq_01.jpg" alt="" class="img-fluid">
+                        <div class="hovereffect"></div>
+                    </a>*@
             </div><!-- end media -->
 
             <div class="hotel-info col-8">
                 <span class="bg-aqua"><a href="garden-category.html" title="">Indoor</a></span>
                 <h4><a href="garden-single.html" title=""> @Html.DisplayFor(modelItem => item.Hotel.hotelName)</a></h4>
                 <p>@Html.DisplayFor(modelItem => item.Hotel.hotelDesc)</p>
-                <small><a href="garden-category.html" title=""><i class="fa fa-eye"></i> 1887</a></small>
-                <small><a href="garden-single.html" title="">11 July, 2017</a></small>
-                <small><a href="#" title="">by Matilda</a></small>
+                @*<small><a href="garden-category.html" title=""><i class="fa fa-eye"></i> 1887</a></small>
+                    <small><a href="garden-single.html" title="">11 July, 2017</a></small>
+                    <small><a href="#" title="">by Matilda</a></small>*@
             </div><!-- end meta -->
         </div>
     }
@@ -180,3 +180,4 @@
 @section Scripts {
     @Scripts.Render("~/bundles/mapbox")
 }
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>

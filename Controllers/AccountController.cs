@@ -156,7 +156,7 @@ namespace MonashBnBv3.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.UserName };
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.UserName, LastName = model.LastName, FirstName = model.FirstName};
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

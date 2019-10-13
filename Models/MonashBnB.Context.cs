@@ -32,6 +32,7 @@ namespace MonashBnBv3.Models
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<Hotel> Hotels { get; set; }
         public virtual DbSet<Image> Images { get; set; }
+        public virtual DbSet<Mail> Mails { get; set; }
         public virtual DbSet<Reservation> Reservations { get; set; }
         public virtual DbSet<Room> Rooms { get; set; }
         public virtual DbSet<RoomType> RoomTypes { get; set; }

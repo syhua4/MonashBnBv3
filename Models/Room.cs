@@ -25,9 +25,9 @@ namespace MonashBnBv3.Models
         public int hotelId { get; set; }
         public int roomTypeId { get; set; }
     
+        public virtual Hotel Hotel { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Reservation> Reservations { get; set; }
         public virtual RoomType RoomType { get; set; }
-        public virtual Hotel Hotel { get; set; }
     }
 }
