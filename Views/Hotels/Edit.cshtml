@@ -1,0 +1,94 @@
+﻿@model MonashBnBv3.Models.Hotel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .form-horizontal {
+        margin-top: 70px;
+    }
+
+    .btn-primary {
+        margin-top: 16px;
+        cursor: pointer;
+        background-color: rgb(244, 154, 153);
+        border: none;
+    }
+
+        .btn-primary:hover {
+            cursor: pointer;
+            background-color: #ee7c72;
+            border: none;
+        }
+
+    .btn1 {
+        margin-right: 16px;
+    }
+
+    .control-label {
+        font-weight: 600;
+        margin-bottom: 16px;
+        margin-top: 32px;
+    }
+</style>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal container col-md-11">
+        <h4>Update Hotel</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.hotelId)
+
+        <div class="form-group">
+            <div class="control-label col-md-2">Hotel Name</div>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.hotelName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.hotelName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-2">Hotel Address</div>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.hotelAddress, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.hotelAddress, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-2">Hotel Description</div>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.hotelDesc, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.hotelDesc, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-2">Hotel Latitude</div>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.hotelLatitude, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.hotelLatitude, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-2">Hotel Longitude</div>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.hotelLongitude, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.hotelLongitude, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="button" class="btn btn-light" value="Back" style="margin-top:16px;" onclick="location.href='@Url.Action("Index", "Hotels")'" />
+            </div>
+        </div>
+    </div>
+}
+

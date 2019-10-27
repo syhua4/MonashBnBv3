@@ -1,0 +1,47 @@
+﻿@model MonashBnBv3.Models.Room
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .form-horizontal {
+        margin-top: 70px;
+    }
+
+    .detail {
+        margin-bottom: 24px;
+    }
+</style>
+<div class="form-horizontal container col-md-11">
+    <h4>Room Detail</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Hotel
+        </dt>
+        <dd class="detail">
+            @Html.DisplayFor(model => model.Hotel.hotelName)
+        </dd>
+        <dt>
+            Room
+        </dt>
+
+        <dd class="detail">
+            @Html.DisplayFor(model => model.RoomType.roomTypeName)
+        </dd>
+        <dt>
+            Price Per Night (AUD $)
+        </dt>
+        <dd class="detail">
+            @Html.DisplayFor(model => model.roomPricePerNight)
+        </dd>
+
+
+
+    </dl>
+    <p>
+        @Html.ActionLink("Book Now", "Create", "Reservations", new { @name = Model.Hotel.hotelName, @price = Model.roomPricePerNight, @roomId = Model.roomId, @type = Model.RoomType.roomTypeName, @hotelId = Model.hotelId }, null) |
+        @Html.ActionLink("Search Again", "Index")
+    </p>
+</div>

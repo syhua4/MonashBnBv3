@@ -140,6 +140,15 @@ namespace MonashBnBv3.Controllers
         }
 
         //
+        public async Task<ActionResult> Role()
+        {
+            if (!UserManager.IsInRole(User.Identity.GetUserId(), "User.Test"))
+                await UserManager.AddToRoleAsync(User.Identity.GetUserId(), "User.Test");
+
+            return RedirectToAction("Index", "Home");
+        }
+
+
         // GET: /Account/Register
         [AllowAnonymous]
         public ActionResult Register()
@@ -156,7 +165,7 @@ namespace MonashBnBv3.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.UserName, LastName = model.LastName, FirstName = model.FirstName};
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, LastName = model.LastName, FirstName = model.FirstName};
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

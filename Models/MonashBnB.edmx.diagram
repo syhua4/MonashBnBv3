@@ -4,28 +4,30 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="63dfda5df6b149eca5349d93f705f188" Name="Diagram1">
-        <EntityTypeShape EntityType="Model.C__MigrationHistory" Width="1.5" PointX="8.75" PointY="2.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.AspNetRole" Width="1.5" PointX="0.75" PointY="6.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.AspNetUserClaim" Width="1.5" PointX="5.25" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.AspNetUserLogin" Width="1.5" PointX="5.25" PointY="7.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.AspNetUser" Width="1.5" PointX="3" PointY="4.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.Hotel" Width="1.5" PointX="6" PointY="10.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.Image" Width="1.5" PointX="3.75" PointY="11.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.Mail" Width="1.5" PointX="0.75" PointY="3.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.Reservation" Width="1.5" PointX="8.25" PointY="5.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.Room" Width="1.5" PointX="6" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.RoomType" Width="1.5" PointX="3.75" PointY="1.5" IsExpanded="true" />
+      <Diagram DiagramId="aea6c325c83e49a58856221f6d85c786" Name="Diagram1">
+        <EntityTypeShape EntityType="Model.AspNetRole" Width="1.5" PointX="0.75" PointY="6" IsExpanded="false" />
+        <EntityTypeShape EntityType="Model.AspNetUserClaim" Width="1.5" PointX="5.25" PointY="4.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="Model.AspNetUserLogin" Width="1.5" PointX="5.25" PointY="7.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="Model.AspNetUser" Width="1.5" PointX="3" PointY="4.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="Model.Hotel" Width="1.5" PointX="6" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Image" Width="1.5" PointX="8.25" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Reservation" Width="1.5" PointX="8.25" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Room" Width="1.5" PointX="6" PointY="10.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.RoomType" Width="1.5" PointX="3.75" PointY="10.75" IsExpanded="true" />
         <AssociationConnector Association="Model.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
         <AssociationConnector Association="Model.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
-        <AssociationConnector Association="Model.FK_sendMail" ManuallyRouted="false" />
         <AssociationConnector Association="Model.FK_userId" ManuallyRouted="false" />
         <AssociationConnector Association="Model.FK_hotelId" ManuallyRouted="false" />
-        <AssociationConnector Association="Model.FK_imageId" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_image_hotelId" ManuallyRouted="false" />
         <AssociationConnector Association="Model.FK_reserve_hotelId" ManuallyRouted="false" />
         <AssociationConnector Association="Model.FK_roomId" ManuallyRouted="false" />
         <AssociationConnector Association="Model.FK_roomTypeId" ManuallyRouted="false" />
         <AssociationConnector Association="Model.AspNetUserRoles" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="Model.C__MigrationHistory" Width="1.5" PointX="8.375" PointY="9.75" />
+        <EntityTypeShape EntityType="Model.Rating" Width="1.5" PointX="11.25" PointY="4" />
+        <AssociationConnector Association="Model.FK_rating_user" />
+        <AssociationConnector Association="Model.FK_rating_hotelId" />
+        <AssociationConnector Association="Model.FK_rating_reserve" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

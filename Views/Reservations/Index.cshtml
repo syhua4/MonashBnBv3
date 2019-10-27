@@ -1,0 +1,68 @@
+﻿@model IEnumerable<MonashBnBv3.Models.Reservation>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    <style>
+        .control {
+            margin-top: 70px;
+        }
+
+    </style>
+
+
+    <div class="control container col-md-11">
+        <h2>View My Reservations</h2>
+        <table class="table">
+            <tr>
+                <th>
+                    Hotel
+                </th>
+                <th>
+                    Room
+                </th>
+                <th>
+                    Check In Date
+                </th>
+                <th>
+                    Check Out Date
+                </th>
+                <th>
+                    Total Price
+                </th>
+
+
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Hotel.hotelName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Room.RoomType.roomTypeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.reserveCheckIn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.reserveCheckOut)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.reservePrice)
+            </td>
+
+            <td>
+                @Html.ActionLink("Rate", "CreateRating", "Ratings", new { @hotelId = item.hotelId, @hotelName = item.Hotel.hotelName, @reserveId = item.reserveId }, null) |
+                @Html.ActionLink("Details", "Details", new { id = item.reserveId }) |
+                @Html.ActionLink("Cancel Booking", "Delete", new { id = item.reserveId })
+            </td>
+        </tr>
+            }
+
+        </table>
+    </div>
+

@@ -7,12 +7,15 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using MonashBnBv3.Models;
 
 namespace MonashBnBv3.Controllers
 {
+    [Authorize(Roles ="Admin")]
     public class MailController : Controller
     {
         private MonashBnB_db db = new MonashBnB_db();
@@ -20,43 +23,65 @@ namespace MonashBnBv3.Controllers
         // GET: Mail
         public ActionResult Index()
         {
-            var aspNetUsers = db.AspNetUsers.Include(a => a.Mail);
-            return View(aspNetUsers.ToList());
+            var user = from u in db.AspNetUsers where !u.UserName.Contains("admin") select u;
+            return View(user.ToList());
         }
 
-        // GET: Mail/Details/5
-        public ActionResult SendMail(string id, string email )
+
+        [HttpPost]
+        public ActionResult BulkMail(String[] resp)
         {
-            var receipient = from r in db.AspNetUsers select r;
-            if (id == null)
+            if (resp == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                var user = from u in db.AspNetUsers where !u.UserName.Contains("admin") select u;
+                ViewBag.Message = "Error";
+                return View("Index", user.ToList());
             }
-            AspNetUser aspNetUser = db.AspNetUsers.Find(id);
-           
-            if (aspNetUser == null)
+            else
             {
-                return HttpNotFound();
+                string kk = "";
+                for (int i = 0; i < resp.Length; i++)
+                {
+                    kk += resp[i] + ", ";
+                }
+                int test = (kk.Length - 2);
+
+
+                StringBuilder builder = new StringBuilder();
+                builder.Append(kk);
+                builder.Remove(test, 2);
+                kk = builder.ToString();
+                ViewBag.Email = kk;
+
+                return View("SendMail");
             }
-            ViewBag.Email = email;
-            return View(new MailTemplate());
         }
 
         [HttpPost]
-
         public ActionResult SendMail(MailTemplate mailModel, HttpPostedFileBase postedFile)
         {
             if (ModelState.IsValid)
             {
                 string from = "MonashBnb@gmail.com";
+
                 using (MailMessage mail = new MailMessage(from, mailModel.To))
                 {
                     mail.Subject = mailModel.Subject;
                     mail.Body = mailModel.Body;
+                    string extension = Path.GetExtension(postedFile.FileName);
                     if (postedFile != null)
                     {
-                        string filename = Path.GetFileName(postedFile.FileName);
-                        mail.Attachments.Add(new Attachment(postedFile.InputStream, filename));
+                        if (!extension.Contains(".exe"))
+                        {
+                            string filename = Path.GetFileName(postedFile.FileName);
+                            mail.Attachments.Add(new Attachment(postedFile.InputStream, filename));
+                        }
+                        else
+                        {
+                            ViewBag.Message = "isExe";
+                            return View("SendMail", mailModel);
+                        }
+                        
                     }
                     mail.IsBodyHtml = true;
                     SmtpClient smtp = new SmtpClient("smtp.gmail.com", Convert.ToInt32(587));
@@ -74,89 +99,6 @@ namespace MonashBnBv3.Controllers
             }
         }
         // GET: Mail/Create
-        public ActionResult Create()
-        {
-            ViewBag.mailId = new SelectList(db.Mails, "mailId", "mailSentTo");
-            return View();
-        }
-
-        // POST: Mail/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Email,EmailConfirmed,PasswordHash,SecurityStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEndDateUtc,LockoutEnabled,AccessFailedCount,UserName,FirstName,LastName,mailId")] AspNetUser aspNetUser)
-        {
-            if (ModelState.IsValid)
-            {
-                db.AspNetUsers.Add(aspNetUser);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            ViewBag.mailId = new SelectList(db.Mails, "mailId", "mailSentTo", aspNetUser.mailId);
-            return View(aspNetUser);
-        }
-
-        // GET: Mail/Edit/5
-        public ActionResult Edit(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            AspNetUser aspNetUser = db.AspNetUsers.Find(id);
-            if (aspNetUser == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.mailId = new SelectList(db.Mails, "mailId", "mailSentTo", aspNetUser.mailId);
-            return View(aspNetUser);
-        }
-
-        // POST: Mail/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Email,EmailConfirmed,PasswordHash,SecurityStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEndDateUtc,LockoutEnabled,AccessFailedCount,UserName,FirstName,LastName,mailId")] AspNetUser aspNetUser)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(aspNetUser).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.mailId = new SelectList(db.Mails, "mailId", "mailSentTo", aspNetUser.mailId);
-            return View(aspNetUser);
-        }
-
-        // GET: Mail/Delete/5
-        public ActionResult Delete(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            AspNetUser aspNetUser = db.AspNetUsers.Find(id);
-            if (aspNetUser == null)
-            {
-                return HttpNotFound();
-            }
-            return View(aspNetUser);
-        }
-
-        // POST: Mail/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
-        {
-            AspNetUser aspNetUser = db.AspNetUsers.Find(id);
-            db.AspNetUsers.Remove(aspNetUser);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)

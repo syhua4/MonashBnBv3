@@ -25,16 +25,16 @@ namespace MonashBnBv3.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<C__MigrationHistory> C__MigrationHistory { get; set; }
         public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<Hotel> Hotels { get; set; }
         public virtual DbSet<Image> Images { get; set; }
-        public virtual DbSet<Mail> Mails { get; set; }
         public virtual DbSet<Reservation> Reservations { get; set; }
         public virtual DbSet<Room> Rooms { get; set; }
         public virtual DbSet<RoomType> RoomTypes { get; set; }
+        public virtual DbSet<C__MigrationHistory> C__MigrationHistory { get; set; }
+        public virtual DbSet<Rating> Ratings { get; set; }
     }
 }

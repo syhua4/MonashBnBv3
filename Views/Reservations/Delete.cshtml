@@ -1,0 +1,94 @@
+﻿@model MonashBnBv3.Models.Reservation
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .form-horizontal {
+        margin-top: 70px;
+    }
+
+    .detail {
+        margin-bottom: 24px;
+    }
+</style>
+<div class="form-horizontal container col-md-11">
+    <h4 style="font-weight:bold;">Are you sure you want to cancel this reservation?</h4>
+    <hr />
+
+    <dl class="dl-horizontal">
+
+        <dt>
+            Hotel
+        </dt>
+
+        <dd class="detail">
+            @Html.DisplayFor(model => model.Hotel.hotelName)
+        </dd>
+        <dt>
+            Room
+        </dt>
+
+        <dd class="detail">
+            @Html.DisplayFor(model => model.Room.RoomType.roomTypeName)
+        </dd>
+
+        <dt>
+            Reserved Email
+        </dt>
+
+        <dd class="detail">
+            @Html.DisplayFor(model => model.AspNetUser.Email)
+        </dd>
+
+        <dt>
+            Reserved Last Name
+        </dt>
+
+        <dd class="detail">
+            @Html.DisplayFor(model => model.AspNetUser.LastName)
+        </dd>
+
+        <dt>
+            Check In Date and Time
+        </dt>
+
+        <dd class="detail">
+            @Html.DisplayFor(model => model.reserveCheckIn)
+        </dd>
+
+        <dt>
+            Check Out Date and Time
+        </dt>
+
+        <dd class="detail">
+            @Html.DisplayFor(model => model.reserveCheckOut)
+        </dd>
+
+        <dt>
+            Total Price
+        </dt>
+
+        <dd class="detail">
+            @Html.DisplayFor(model => model.reservePrice)
+        </dd>
+
+
+
+
+
+    </dl>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            <input type="button" class="btn btn-dark" value="Back" onclick="location.href='@Url.Action("Index", "Reservations")'" />
+        </div>
+    }
+</div>
+
+
+

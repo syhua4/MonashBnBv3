@@ -4,23 +4,40 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-    <style>
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<style>
     .form-horizontal {
         margin-top: 70px;
     }
-    h4{
-        margin-top:30px;
-        margin-bottom:16px;
-    }
-    </style>
 
+    h4 {
+        margin-top: 30px;
+        margin-bottom: 16px;
+    }
+
+    .btn-primary {
+        margin-top: 16px;
+        cursor: pointer;
+        background-color: rgb(244, 154, 153);
+        border: none;
+    }
+
+        .btn-primary:hover {
+            cursor: pointer;
+            background-color: #ee7c72;
+            border: none;
+        }
+</style>
+
+@using (Html.BeginForm("BulkMail", "Mail", FormMethod.Post, new { encType = "multipart/form-data", name = "myform" }))
+{
     <div class="form-horizontal container col-md-11">
         <h4>Mail Receipient</h4>
         <table class="table">
             <tr>
                 @*<th>
-                    @Html.DisplayNameFor(model => model.Mail.mailSelected)
-                </th>*@
+                        @Html.DisplayNameFor(model => model.Mail.mailSelected)
+                    </th>*@
                 <th>
                     @Html.DisplayNameFor(model => model.UserName)
                 </th>
@@ -28,41 +45,43 @@
                     @Html.DisplayNameFor(model => model.Email)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.FirstName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LastName)
+                    Send Email
                 </th>
                 <th></th>
             </tr>
 
             @foreach (var item in Model)
             {
-                <tr>
+        <tr>
 
-                    @*<td>
-                        @Html.CheckBoxFor(modelItem => item.Mail.mailSelected))
-                    </td>*@
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UserName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Email)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FirstName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LastName)
-                    </td>
-
-                    <td>
-                        @Html.ActionLink("Send Mail", "SendMail", new { id = item.Id, email = item.Email }) |
-                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                    </td>
-                </tr>
+            @*<td>
+            @Html.CheckBoxFor(modelItem => item.Mail.mailSelected))
+        </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                <input type="checkbox" class="check" value="@item.Email" name="resp" />
+            </td>
+        </tr>
             }
 
         </table>
+
+        <input type="submit" class="btn btn-primary" value="Send Email" />
     </div>
+}
+<script>
+    $(document).ready(function () {
+        if ('@ViewBag.Message' == 'Error') {
+            alert('Please select at least one email receipient!');
+        }
+    });
+</script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+}

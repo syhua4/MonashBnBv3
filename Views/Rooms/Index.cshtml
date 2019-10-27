@@ -7,6 +7,7 @@
 <link href="~/Content/bootstrap-datepicker.css" rel="stylesheet" />
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
 <script src="~/Scripts/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/Chart.min.js"></script>
 
 <style>
     body, html {
@@ -60,6 +61,10 @@
         right: 0;
         display: block;
     }
+
+    .input {
+        max-width: 100%;
+    }
 </style>
 <div class="hero-image">
     <div class="container padding">
@@ -72,7 +77,7 @@
             @using (Html.BeginForm("Search", "Rooms", FormMethod.Post))
             {
                 <div class="row form-group">
-                    <div class="col-12">
+                    <div class="col-md-12">
                         @Html.Label("WHERE DO YOU WANT TO GO?", htmlAttributes: new { @class = "control-label" })
                         @Html.Editor("destination", new { htmlAttributes = new { @class = "form-control" } })
 
@@ -90,7 +95,7 @@
                     </div>
                     <div class="col-md-4">
                         @Html.Label("GUESTS", htmlAttributes: new { @class = "control-label" })
-                        @Html.Editor("guestNumber", new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.Editor("guestNumber", new { htmlAttributes = new { @class = "form-control", @type="number",  @min = "1", @step = "1" } })
                     </div>
                 </div>
                 <br />
@@ -109,17 +114,171 @@
 
 
             }
+
+
+
+
+        </div>
+    </div>
+</div>
+
+
+@using (Html.BeginForm("Index", "Rooms", null, FormMethod.Post))
+{
+    <div class="container">
+        <div>
+            <h2 style="padding-top:48px; font-family:'Roboto'; font-weight:800;">What guests prefer in Australia....</h2>
+        </div>
+        <div Style="font-family: Roboto; font-size: small ;text-align:center;" class="row">
+            <div class="col-lg-4 col-md-12 col-sm-12" style="position:relative; margin:auto; height:30vh; width:25%; margin-top:50px; padding:5px;border:solid 0.5px; border-radius:6px; box-shadow:1px 1px 0.5px 0.5px #e1e1e1; margin-bottom:50px;">
+                <canvas id="popularChart" style="padding: 0;margin: auto;display:block;"> </canvas>
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12" style="position:relative; margin:auto; height:30vh; width:25%; margin-top:50px; padding:5px;border:solid 0.5px; border-radius:6px; box-shadow:1px 1px 0.5px 0.5px #e1e1e1; margin-bottom:50px;">
+                <canvas id="cheapChart" style="padding: 0;margin: auto;display:block"> </canvas>
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12" style="position:relative; margin:auto; height:30vh; width:25%; margin-top:50px; padding:5px;border:solid 0.5px; border-radius:6px; box-shadow:1px 1px 0.5px 0.5px #e1e1e1; margin-bottom:50px;">
+                <canvas id="rateChart" style="padding: 0;margin: auto;display:block"> </canvas>
+            </div>
         </div>
 
     </div>
-</div>
+}
 <script>
+    var date = new Date();
+    date.setDate(date.getDate());
     $('#checkInDate, #checkOutDate').datepicker({
-        format: 'dd/mm/yyyy',
+        format: 'dd-mm-yyyy',
         autoclose: true,
-        todayHighlight: true
+        todayHighlight: true,
+        startDate: date,
+        endDate: '+30d'
     });
 </script>
+<script>
+    $(document).ready(function () {
+        if ('@ViewBag.Message' == 'nodate') {
+            alert('Please enter the checkin and checkout dates before search!');
+        }
+    });
+</script>
+<script>
+    $.ajax({
+        type: "POST",
+        url: "/Rooms/popularHotel",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (chData) {
+            var aData = chData;
+            var aLabels = aData[0];
+            var aDatasets1 = aData[1];
+            var dataT = {
+                labels: aLabels,
+                datasets: [{
+                    label: "Count",
+                    data: aDatasets1,
+                    fill: false,
+                    backgroundColor: ["rgba(54, 162, 235, 0.2)", "rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
+                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)"],
+                    borderWidth: 1
+                }]
+            };
+            var ctx = $("#popularChart").get(0).getContext("2d");
+            var myNewChart = new Chart(ctx, {
+                type: 'bar',
+                data: dataT,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    title: { display: true, text: 'Most Popular Hotels', fontSize: 24 },
+                    scales: {
+                        xAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: false, labelString: '' } }],
+                        yAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: false, labelString: '' }, ticks: { stepSize: 50, beginAtZero: true } }]
+                    },
+                }
+            });
+        }
+    });
+</script>
+<script>
+    $.ajax({
+        type: "POST",
+        url: "/Rooms/cheapestHotel",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (chData) {
+            var aData = chData;
+            var aLabels = aData[0];
+            var aDatasets1 = aData[1];
+            var dataT = {
+                labels: aLabels,
+                datasets: [{
+                    label: "Price $",
+                    data: aDatasets1,
+                    fill: false,
+                    backgroundColor: ["rgba(54, 162, 235, 0.2)", "rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
+                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)"],
+                    borderWidth: 1
+                }]
+            };
+            var ctx = $("#cheapChart").get(0).getContext("2d");
+            var myNewChart = new Chart(ctx, {
+                type: 'bar',
+                data: dataT,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    title: { display: true, text: 'Cheapest hotel for single stay', fontSize: 24 },
+                    scales: {
+                        xAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: false, labelString: '' } }],
+                        yAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: false, labelString: '' }, ticks: { stepSize: 50, beginAtZero: true } }]
+                    },
+                }
+            });
+        }
+    });
+
+</script>
+<script>
+    $.ajax({
+        type: "POST",
+        url: "/Rooms/highestRating",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (chData) {
+            var aData = chData;
+            var aLabels = aData[0];
+            var aDatasets1 = aData[1];
+            var dataT = {
+                labels: aLabels,
+                datasets: [{
+                    label: "Rate",
+                    data: aDatasets1,
+                    fill: false,
+                    backgroundColor: ["rgba(54, 162, 235, 0.2)", "rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
+                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)"],
+                    borderWidth: 1
+                }]
+            };
+            var ctx = $("#rateChart").get(0).getContext("2d");
+            var myNewChart = new Chart(ctx, {
+                type: 'bar',
+                data: dataT,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    title: { display: true, text: 'Top Rated Hotels', fontSize: 24 },
+                    scales: {
+                        xAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: false, labelString: '' } }],
+                        yAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: false, labelString: '' }, ticks: { stepSize: 50, beginAtZero: true } }]
+                    },
+                }
+            });
+        }
+    });
+
+</script>
+
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 

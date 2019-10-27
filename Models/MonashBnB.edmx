@@ -77,10 +77,8 @@
           <Property Name="hotelName" Type="nvarchar(max)" Nullable="false" />
           <Property Name="hotelAddress" Type="nvarchar(max)" Nullable="false" />
           <Property Name="hotelDesc" Type="nvarchar(max)" />
-          <Property Name="hotelAmenties" Type="nvarchar(max)" />
           <Property Name="hotelLatitude" Type="decimal" Precision="10" Scale="8" Nullable="false" />
           <Property Name="hotelLongitude" Type="decimal" Precision="11" Scale="8" Nullable="false" />
-          <Property Name="imageId" Type="int" />
         </EntityType>
         <EntityType Name="Images">
           <Key>
@@ -89,14 +87,17 @@
           <Property Name="imageId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="imagePath" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="imageName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="hotelId" Type="int" />
         </EntityType>
-        <EntityType Name="Mails">
+        <EntityType Name="Ratings">
           <Key>
-            <PropertyRef Name="mailId" />
+            <PropertyRef Name="ratingId" />
           </Key>
-          <Property Name="mailId" Type="int" Nullable="false" />
-          <Property Name="mailSentDate" Type="datetime" />
-          <Property Name="mailSelected" Type="bit" />
+          <Property Name="ratingId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ratingNum" Type="decimal" Precision="3" Scale="2" Nullable="false" />
+          <Property Name="userId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="hotelId" Type="int" Nullable="false" />
+          <Property Name="reserveId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Reservations">
           <Key>
@@ -195,15 +196,51 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_imageId">
-          <End Role="Images" Type="Self.Images" Multiplicity="0..1" />
-          <End Role="Hotels" Type="Self.Hotels" Multiplicity="*" />
+        <Association Name="FK_image_hotelId">
+          <End Role="Hotels" Type="Self.Hotels" Multiplicity="0..1" />
+          <End Role="Images" Type="Self.Images" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Images">
-              <PropertyRef Name="imageId" />
+            <Principal Role="Hotels">
+              <PropertyRef Name="hotelId" />
             </Principal>
-            <Dependent Role="Hotels">
-              <PropertyRef Name="imageId" />
+            <Dependent Role="Images">
+              <PropertyRef Name="hotelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_rating_hotelId">
+          <End Role="Hotels" Type="Self.Hotels" Multiplicity="1" />
+          <End Role="Ratings" Type="Self.Ratings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Hotels">
+              <PropertyRef Name="hotelId" />
+            </Principal>
+            <Dependent Role="Ratings">
+              <PropertyRef Name="hotelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_rating_reserve">
+          <End Role="Reservations" Type="Self.Reservations" Multiplicity="1" />
+          <End Role="Ratings" Type="Self.Ratings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Reservations">
+              <PropertyRef Name="reserveId" />
+            </Principal>
+            <Dependent Role="Ratings">
+              <PropertyRef Name="reserveId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_rating_user">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="Ratings" Type="Self.Ratings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Ratings">
+              <PropertyRef Name="userId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -243,18 +280,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_sendMail">
-          <End Role="Mails" Type="Self.Mails" Multiplicity="0..1" />
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Mails">
-              <PropertyRef Name="mailId" />
-            </Principal>
-            <Dependent Role="AspNetUsers">
-              <PropertyRef Name="mailId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_userId">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
           <End Role="Reservations" Type="Self.Reservations" Multiplicity="*" />
@@ -276,7 +301,7 @@
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Hotels" EntityType="Self.Hotels" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Images" EntityType="Self.Images" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Mails" EntityType="Self.Mails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Ratings" EntityType="Self.Ratings" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Reservations" EntityType="Self.Reservations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Rooms" EntityType="Self.Rooms" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RoomTypes" EntityType="Self.RoomTypes" Schema="dbo" store:Type="Tables" />
@@ -300,9 +325,21 @@
             <End Role="Hotels" EntitySet="Hotels" />
             <End Role="Rooms" EntitySet="Rooms" />
           </AssociationSet>
-          <AssociationSet Name="FK_imageId" Association="Self.FK_imageId">
-            <End Role="Images" EntitySet="Images" />
+          <AssociationSet Name="FK_image_hotelId" Association="Self.FK_image_hotelId">
             <End Role="Hotels" EntitySet="Hotels" />
+            <End Role="Images" EntitySet="Images" />
+          </AssociationSet>
+          <AssociationSet Name="FK_rating_hotelId" Association="Self.FK_rating_hotelId">
+            <End Role="Hotels" EntitySet="Hotels" />
+            <End Role="Ratings" EntitySet="Ratings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_rating_reserve" Association="Self.FK_rating_reserve">
+            <End Role="Reservations" EntitySet="Reservations" />
+            <End Role="Ratings" EntitySet="Ratings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_rating_user" Association="Self.FK_rating_user">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Ratings" EntitySet="Ratings" />
           </AssociationSet>
           <AssociationSet Name="FK_reserve_hotelId" Association="Self.FK_reserve_hotelId">
             <End Role="Hotels" EntitySet="Hotels" />
@@ -316,10 +353,6 @@
             <End Role="RoomTypes" EntitySet="RoomTypes" />
             <End Role="Rooms" EntitySet="Rooms" />
           </AssociationSet>
-          <AssociationSet Name="FK_sendMail" Association="Self.FK_sendMail">
-            <End Role="Mails" EntitySet="Mails" />
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-          </AssociationSet>
           <AssociationSet Name="FK_userId" Association="Self.FK_userId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="Reservations" EntitySet="Reservations" />
@@ -329,16 +362,6 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="C__MigrationHistory">
-          <Key>
-            <PropertyRef Name="MigrationId" />
-            <PropertyRef Name="ContextKey" />
-          </Key>
-          <Property Name="MigrationId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="ContextKey" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Model" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
-          <Property Name="ProductVersion" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
-        </EntityType>
         <EntityType Name="AspNetRole">
           <Key>
             <PropertyRef Name="Id" />
@@ -389,9 +412,9 @@
           <Property Name="mailId" Type="Int32" />
           <NavigationProperty Name="AspNetUserClaims" Relationship="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
           <NavigationProperty Name="AspNetUserLogins" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
-          <NavigationProperty Name="Mail" Relationship="Self.FK_sendMail" FromRole="AspNetUsers" ToRole="Mails" />
           <NavigationProperty Name="Reservations" Relationship="Self.FK_userId" FromRole="AspNetUsers" ToRole="Reservations" />
           <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
+          <NavigationProperty Name="Ratings" Relationship="Model.FK_rating_user" FromRole="AspNetUser" ToRole="Rating" />
         </EntityType>
         <EntityType Name="Hotel">
           <Key>
@@ -401,13 +424,12 @@
           <Property Name="hotelName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="hotelAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="hotelDesc" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="hotelAmenties" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="hotelLatitude" Type="Decimal" Precision="10" Scale="8" Nullable="false" />
           <Property Name="hotelLongitude" Type="Decimal" Precision="11" Scale="8" Nullable="false" />
-          <Property Name="imageId" Type="Int32" />
           <NavigationProperty Name="Rooms" Relationship="Self.FK_hotelId" FromRole="Hotels" ToRole="Rooms" />
-          <NavigationProperty Name="Image" Relationship="Self.FK_imageId" FromRole="Hotels" ToRole="Images" />
+          <NavigationProperty Name="Images" Relationship="Self.FK_image_hotelId" FromRole="Hotels" ToRole="Images" />
           <NavigationProperty Name="Reservations" Relationship="Self.FK_reserve_hotelId" FromRole="Hotels" ToRole="Reservations" />
+          <NavigationProperty Name="Ratings" Relationship="Model.FK_rating_hotelId" FromRole="Hotel" ToRole="Rating" />
         </EntityType>
         <EntityType Name="Image">
           <Key>
@@ -416,16 +438,8 @@
           <Property Name="imageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="imagePath" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="imageName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Hotels" Relationship="Self.FK_imageId" FromRole="Images" ToRole="Hotels" />
-        </EntityType>
-        <EntityType Name="Mail">
-          <Key>
-            <PropertyRef Name="mailId" />
-          </Key>
-          <Property Name="mailId" Type="Int32" Nullable="false" />
-          <Property Name="mailSentDate" Type="DateTime" Precision="3" />
-          <Property Name="mailSelected" Type="Boolean" />
-          <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_sendMail" FromRole="Mails" ToRole="AspNetUsers" />
+          <Property Name="hotelId" Type="Int32" />
+          <NavigationProperty Name="Hotel" Relationship="Self.FK_image_hotelId" FromRole="Images" ToRole="Hotels" />
         </EntityType>
         <EntityType Name="Reservation">
           <Key>
@@ -441,6 +455,7 @@
           <NavigationProperty Name="AspNetUser" Relationship="Self.FK_userId" FromRole="Reservations" ToRole="AspNetUsers" />
           <NavigationProperty Name="Hotel" Relationship="Self.FK_reserve_hotelId" FromRole="Reservations" ToRole="Hotels" />
           <NavigationProperty Name="Room" Relationship="Self.FK_roomId" FromRole="Reservations" ToRole="Rooms" />
+          <NavigationProperty Name="Ratings" Relationship="Model.FK_rating_reserve" FromRole="Reservation" ToRole="Rating" />
         </EntityType>
         <EntityType Name="Room">
           <Key>
@@ -491,18 +506,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_sendMail">
-          <End Role="Mails" Type="Self.Mail" Multiplicity="0..1" />
-          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Mails">
-              <PropertyRef Name="mailId" />
-            </Principal>
-            <Dependent Role="AspNetUsers">
-              <PropertyRef Name="mailId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_userId">
           <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1" />
           <End Role="Reservations" Type="Self.Reservation" Multiplicity="*" />
@@ -527,15 +530,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_imageId">
-          <End Role="Images" Type="Self.Image" Multiplicity="0..1" />
-          <End Role="Hotels" Type="Self.Hotel" Multiplicity="*" />
+        <Association Name="FK_image_hotelId">
+          <End Role="Hotels" Type="Self.Hotel" Multiplicity="0..1" />
+          <End Role="Images" Type="Self.Image" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Images">
-              <PropertyRef Name="imageId" />
+            <Principal Role="Hotels">
+              <PropertyRef Name="hotelId" />
             </Principal>
-            <Dependent Role="Hotels">
-              <PropertyRef Name="imageId" />
+            <Dependent Role="Images">
+              <PropertyRef Name="hotelId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -580,14 +583,12 @@
           <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
         </Association>
         <EntityContainer Name="MonashBnB_db" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="C__MigrationHistory" EntityType="Self.C__MigrationHistory" />
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRole" />
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaim" />
           <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogin" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUser" />
           <EntitySet Name="Hotels" EntityType="Self.Hotel" />
           <EntitySet Name="Images" EntityType="Self.Image" />
-          <EntitySet Name="Mails" EntityType="Self.Mail" />
           <EntitySet Name="Reservations" EntityType="Self.Reservation" />
           <EntitySet Name="Rooms" EntityType="Self.Room" />
           <EntitySet Name="RoomTypes" EntityType="Self.RoomType" />
@@ -599,10 +600,6 @@
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
           </AssociationSet>
-          <AssociationSet Name="FK_sendMail" Association="Self.FK_sendMail">
-            <End Role="Mails" EntitySet="Mails" />
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-          </AssociationSet>
           <AssociationSet Name="FK_userId" Association="Self.FK_userId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="Reservations" EntitySet="Reservations" />
@@ -611,9 +608,9 @@
             <End Role="Hotels" EntitySet="Hotels" />
             <End Role="Rooms" EntitySet="Rooms" />
           </AssociationSet>
-          <AssociationSet Name="FK_imageId" Association="Self.FK_imageId">
-            <End Role="Images" EntitySet="Images" />
+          <AssociationSet Name="FK_image_hotelId" Association="Self.FK_image_hotelId">
             <End Role="Hotels" EntitySet="Hotels" />
+            <End Role="Images" EntitySet="Images" />
           </AssociationSet>
           <AssociationSet Name="FK_reserve_hotelId" Association="Self.FK_reserve_hotelId">
             <End Role="Hotels" EntitySet="Hotels" />
@@ -631,23 +628,86 @@
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
+          <EntitySet Name="C__MigrationHistory" EntityType="Model.C__MigrationHistory" />
+          <EntitySet Name="Ratings" EntityType="Model.Rating" />
+          <AssociationSet Name="FK_rating_user" Association="Model.FK_rating_user">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="Rating" EntitySet="Ratings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_rating_hotelId" Association="Model.FK_rating_hotelId">
+            <End Role="Hotel" EntitySet="Hotels" />
+            <End Role="Rating" EntitySet="Ratings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_rating_reserve" Association="Model.FK_rating_reserve">
+            <End Role="Reservation" EntitySet="Reservations" />
+            <End Role="Rating" EntitySet="Ratings" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="C__MigrationHistory">
+          <Key>
+            <PropertyRef Name="MigrationId" />
+            <PropertyRef Name="ContextKey" />
+          </Key>
+          <Property Name="MigrationId" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="ContextKey" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="Model" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="ProductVersion" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Rating">
+          <Key>
+            <PropertyRef Name="ratingId" />
+          </Key>
+          <Property Name="ratingId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ratingNum" Type="Decimal" Nullable="false" Precision="3" Scale="2" />
+          <Property Name="userId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="hotelId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AspNetUser" Relationship="Model.FK_rating_user" FromRole="Rating" ToRole="AspNetUser" />
+          <NavigationProperty Name="Hotel" Relationship="Model.FK_rating_hotelId" FromRole="Rating" ToRole="Hotel" />
+          <Property Name="reserveId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Reservation" Relationship="Model.FK_rating_reserve" FromRole="Rating" ToRole="Reservation" />
+        </EntityType>
+        <Association Name="FK_rating_user">
+          <End Type="Model.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="Model.Rating" Role="Rating" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Rating">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_rating_hotelId">
+          <End Type="Model.Hotel" Role="Hotel" Multiplicity="1" />
+          <End Type="Model.Rating" Role="Rating" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Hotel">
+              <PropertyRef Name="hotelId" />
+            </Principal>
+            <Dependent Role="Rating">
+              <PropertyRef Name="hotelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_rating_reserve">
+          <End Type="Model.Reservation" Role="Reservation" Multiplicity="1" />
+          <End Type="Model.Rating" Role="Rating" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Reservation">
+              <PropertyRef Name="reserveId" />
+            </Principal>
+            <Dependent Role="Rating">
+              <PropertyRef Name="reserveId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="MonashBnB_db">
-          <EntitySetMapping Name="C__MigrationHistory">
-            <EntityTypeMapping TypeName="Model.C__MigrationHistory">
-              <MappingFragment StoreEntitySet="__MigrationHistory">
-                <ScalarProperty Name="MigrationId" ColumnName="MigrationId" />
-                <ScalarProperty Name="ContextKey" ColumnName="ContextKey" />
-                <ScalarProperty Name="Model" ColumnName="Model" />
-                <ScalarProperty Name="ProductVersion" ColumnName="ProductVersion" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="AspNetRoles">
             <EntityTypeMapping TypeName="Model.AspNetRole">
               <MappingFragment StoreEntitySet="AspNetRoles">
@@ -703,10 +763,8 @@
                 <ScalarProperty Name="hotelName" ColumnName="hotelName" />
                 <ScalarProperty Name="hotelAddress" ColumnName="hotelAddress" />
                 <ScalarProperty Name="hotelDesc" ColumnName="hotelDesc" />
-                <ScalarProperty Name="hotelAmenties" ColumnName="hotelAmenties" />
                 <ScalarProperty Name="hotelLatitude" ColumnName="hotelLatitude" />
                 <ScalarProperty Name="hotelLongitude" ColumnName="hotelLongitude" />
-                <ScalarProperty Name="imageId" ColumnName="imageId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -716,15 +774,7 @@
                 <ScalarProperty Name="imageId" ColumnName="imageId" />
                 <ScalarProperty Name="imagePath" ColumnName="imagePath" />
                 <ScalarProperty Name="imageName" ColumnName="imageName" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Mails">
-            <EntityTypeMapping TypeName="Model.Mail">
-              <MappingFragment StoreEntitySet="Mails">
-                <ScalarProperty Name="mailId" ColumnName="mailId" />
-                <ScalarProperty Name="mailSentDate" ColumnName="mailSentDate" />
-                <ScalarProperty Name="mailSelected" ColumnName="mailSelected" />
+                <ScalarProperty Name="hotelId" ColumnName="hotelId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -768,6 +818,27 @@
               <ScalarProperty Name="Id" ColumnName="UserId" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="C__MigrationHistory">
+            <EntityTypeMapping TypeName="Model.C__MigrationHistory">
+              <MappingFragment StoreEntitySet="__MigrationHistory">
+                <ScalarProperty Name="ProductVersion" ColumnName="ProductVersion" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="ContextKey" ColumnName="ContextKey" />
+                <ScalarProperty Name="MigrationId" ColumnName="MigrationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Ratings">
+            <EntityTypeMapping TypeName="Model.Rating">
+              <MappingFragment StoreEntitySet="Ratings">
+                <ScalarProperty Name="reserveId" ColumnName="reserveId" />
+                <ScalarProperty Name="hotelId" ColumnName="hotelId" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="ratingNum" ColumnName="ratingNum" />
+                <ScalarProperty Name="ratingId" ColumnName="ratingId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

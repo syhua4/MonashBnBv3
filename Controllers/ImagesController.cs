@@ -47,7 +47,7 @@ namespace MonashBnBv3.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "imageId,imagePath,imageName")] Image image, HttpPostedFileBase postedFile)
+        public ActionResult Create([Bind(Include = "imageId,imagePath,imageName,hotelId")] Image image, HttpPostedFileBase postedFile)
         {
             ModelState.Clear();
             var fileName = string.Format(@"{0}", Guid.NewGuid());
@@ -65,7 +65,7 @@ namespace MonashBnBv3.Controllers
 
                 db.Images.Add(image);
                 db.SaveChanges();
-                return RedirectToAction("Index", "Rooms");
+                return RedirectToAction("Index");
             }
 
                 return View(image);

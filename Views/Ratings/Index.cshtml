@@ -1,0 +1,42 @@
+﻿@model IEnumerable<MonashBnBv3.Models.Rating>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    <style>
+        .table-horizontal {
+            margin-top: 70px;
+        }
+
+    </style>
+    <div class="table-horizontal container col-md-11">
+        <h4>My Experience at...</h4>
+        <table class="table">
+            <tr>
+                <th>
+                    Hotel
+                </th>
+                <th>
+                    Your Rating
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Hotel.hotelName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ratingNum)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Remove Rating", "Delete", new { id = item.ratingId })
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>

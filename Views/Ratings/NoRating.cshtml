@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "NoRating";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .container {
+        margin-top: 70px;
+    }
+
+    .alert {
+        font-size: 15px;
+        font-weight: bold;
+    }
+</style>
+<div class="container col-md-11">
+    <div class="alert alert-danger">
+        Please rate one of your experience before viewing your ratings
+    </div>
+    @Html.ActionLink("View Reservations", "Index", "Reservations")
+
+</div>

@@ -1,0 +1,46 @@
+﻿@model IEnumerable<MonashBnBv3.Models.Image>
+
+@{
+    ViewBag.Title = "Index2";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index2</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.imagePath)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.imageName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Hotel.hotelName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.imagePath)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.imageName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Hotel.hotelName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.imageId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.imageId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.imageId })
+        </td>
+    </tr>
+}
+
+</table>

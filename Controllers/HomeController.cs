@@ -12,7 +12,7 @@ namespace MonashBnBv3.Controllers
         {
             return View();
         }
-
+        [Authorize(Roles = "User.Test")]
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";

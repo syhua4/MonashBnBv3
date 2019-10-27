@@ -60,8 +60,8 @@ namespace MonashBnBv3
 
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             {
-                ClientId = "747548150090-fh5gdq8jd81js7r4g1etlcs8k4r5ubne.apps.googleusercontent.com",
-                ClientSecret = "P-2beS46CHP05hrmvVKl7Hni"
+                ClientId = "747548150090-k4003r7dma31uo42objghotb5gs7622i.apps.googleusercontent.com",
+                ClientSecret = "-9MqfCiodQuppeBjrYFzTIgb"
             });
         }
     }

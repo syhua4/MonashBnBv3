@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
 namespace MonashBnBv3.Models
 {
-    public class SelectedReceipient
+    public class SelectedReceipientVM
     {
-        public bool Selected { get; set; }
-
-        public SelectedReceipient() { }
-        public string Email { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public bool isSelected { get; set; }
+        public SelectedReceipientVM() {}
+        //public String UserId { get; set; }
+        public String Username { get; set; }
+        public String Email { get; set; }
     }
 }

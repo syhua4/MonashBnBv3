@@ -5,19 +5,61 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Create</h2>
+<style>
+    .form-horizontal {
+        margin-top: 70px;
+    }
 
+    .btn-primary {
+        margin-top: 16px;
+        cursor: pointer;
+        background-color: rgb(244, 154, 153);
+        border: none;
+    }
 
-@using (Html.BeginForm()) 
+        .btn-primary:hover {
+            cursor: pointer;
+            background-color: #ee7c72;
+            border: none;
+        }
+
+    .btn1 {
+        margin-right: 16px;
+    }
+
+    .control-label {
+        font-weight: 600;
+        margin-bottom: 16px;
+        margin-top: 32px;
+    }
+</style>
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Room</h4>
-        <hr />
+
+<div class="form-horizontal container col-md-11">
+    <h4>Create Room</h4>
+    <hr />
+
+
+    <div class="form-group">
+        <div class="control-label col-md-2">Hotel Id</div>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.hotelId, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.hotelId, @ReadOnly = "true" } })
+            @Html.ValidationMessageFor(model => model.hotelId, "", new { @class = "text-danger" })
+        </div>
+
+
+        <div class="form-group">
+            <div class="control-label col-md-2">Room Type</div>
+            <div class="col-md-10">
+                @Html.DropDownList("roomTypeId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.roomTypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.roomPricePerNight, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="control-label col-md-2">Room Price Per Night</div>
             <div class="col-md-10">
                 @Html.EditorFor(model => model.roomPricePerNight, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.roomPricePerNight, "", new { @class = "text-danger" })
@@ -25,32 +67,15 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.hotelId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.hotelId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.hotelId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.roomTypeId, "roomTypeId", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("roomTypeId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.roomTypeId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="button" class="btn btn-light" value="Back" style="margin-top:16px;" onclick="location.href='@Url.Action("Index", "Hotels")'" />
             </div>
         </div>
     </div>
+</div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

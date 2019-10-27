@@ -10,13 +10,14 @@
     <link href="https://fonts.googleapis.com/css?family=Niconne|Roboto&display=swap" rel="stylesheet">
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
     <link href="~/Content/font-awesome.css" rel="stylesheet" />
+    <script src="~/Scripts/tinymce/tinymce.min.js"></script>
     @* This is for the mapbox map. *@
     <script src='https://api.mapbox.com/mapbox-gl-js/v0.47.0/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v0.47.0/mapbox-gl.css' rel='stylesheet' />
     @*This is used for the Geocoding Mapbox API*@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    <script src="~/Scripts/tinymce/tinymce.min.js"></script>
+
 
 
 
@@ -30,6 +31,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
         </div>
+
         @Html.Partial("_LoginPartial")
     </nav>
     @RenderBody()

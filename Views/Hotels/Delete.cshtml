@@ -1,0 +1,74 @@
+﻿@model MonashBnBv3.Models.Hotel
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .form-horizontal {
+        margin-top: 70px;
+    }
+
+    .detail {
+        margin-bottom: 24px;
+    }
+</style>
+<div class="form-horizontal container col-md-11">
+    <h4 style="font-weight:bold;">Are you sure you want to cancel this hotel?</h4>
+    <hr />
+
+    <dl class="dl-horizontal">
+
+        <dt>
+            Hotel Name
+        </dt>
+
+        <dd class="detail">
+            @Html.DisplayFor(model => model.hotelName)
+        </dd>
+
+        <dt>
+            Hotel Address
+        </dt>
+
+        <dd class="detail">
+            @Html.DisplayFor(model => model.hotelAddress)
+        </dd>
+
+        <dt>
+            Hotel Description
+        </dt>
+
+        <dd class="detail">
+            @Html.DisplayFor(model => model.hotelDesc)
+        </dd>
+
+        <dt>
+            Latitude
+        </dt>
+
+        <dd class="detail">
+            @Html.DisplayFor(model => model.hotelLatitude)
+        </dd>
+
+        <dt>
+            Longitude
+        </dt>
+
+        <dd class="detail">
+            @Html.DisplayFor(model => model.hotelLongitude)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" /> 
+            <input type="button" class="btn btn-dark" value="Back" onclick="location.href='@Url.Action("Index", "Hotels")'" />
+        </div>
+    }
+</div>

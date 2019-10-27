@@ -1,0 +1,63 @@
+﻿@model IEnumerable<MonashBnBv3.Models.Hotel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .table-horizontal {
+        margin-top: 70px;
+    }
+    .table{
+        table-layout:fixed;
+    }
+    .td{
+        word-wrap:break-word;
+    }
+</style>
+<div class="table-horizontal container col-md-11">
+    <div class="row">
+        <h4>Hotel List</h4>
+        <input type="button" class="btn btn-dark offset-10" value="Create" style="margin-bottom:8px;" onclick="location.href='@Url.Action("Create", "Hotels")'" />
+    </div>
+    
+
+
+    <table class="table">
+        <tr>
+            <th>
+                Hotel
+            </th>
+            <th>
+                Address
+            </th>
+            <th>
+                Describe
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.hotelName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.hotelAddress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.hotelDesc)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.hotelId }) |
+                    @Html.ActionLink("Add Room", "Create", "Rooms", new { @id = item.hotelId}, null) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.hotelId })
+                </td>
+
+            </tr>
+        }
+
+    </table>
+</div>

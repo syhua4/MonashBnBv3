@@ -11,7 +11,8 @@ namespace MonashBnBv3.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Room
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -21,6 +22,8 @@ namespace MonashBnBv3.Models
         }
     
         public int roomId { get; set; }
+        [Required(ErrorMessage = "Price is required")]
+        [RegularExpression("([1-9][0-9]*)", ErrorMessage ="Price need to be a numeric value")]
         public double roomPricePerNight { get; set; }
         public int hotelId { get; set; }
         public int roomTypeId { get; set; }

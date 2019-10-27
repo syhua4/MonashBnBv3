@@ -14,17 +14,11 @@ namespace MonashBnBv3.Models
     
     public partial class Image
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Image()
-        {
-            this.Hotels = new HashSet<Hotel>();
-        }
-    
         public int imageId { get; set; }
         public string imagePath { get; set; }
         public string imageName { get; set; }
+        public Nullable<int> hotelId { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Hotel> Hotels { get; set; }
+        public virtual Hotel Hotel { get; set; }
     }
 }

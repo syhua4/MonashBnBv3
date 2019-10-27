@@ -1,0 +1,61 @@
+﻿@model IEnumerable<MonashBnBv3.Models.Image>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .hover:hover{
+        transform:scale(1.01);
+        box-shadow: 0 10px 10px rgba(0,0,0,.15)!important;
+          cursor:pointer;
+        
+    }
+    .img {
+  max-width: 100%;
+  height: auto;
+
+}
+
+
+</style>
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<div class="container col-md-11">
+    <table width="100%">
+        @{
+            const int col = 3;
+            int skip = 0;
+            var items = Model.Skip(skip).Take(col);
+            while (items.Count() > 0)
+            {
+                <tr>
+                    @foreach (var item in items)
+                    {
+                        <td>
+                            <table width="80%">
+                                <tr>
+                                    <td>
+                                        <img class="img-fluid hover" src="@Url.Content("~/Uploads/" + item.imagePath)" onclick="location.href='@Url.Action("Edit", "Images", new { id=item.imageId })'"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="card-body" style="text-align:center;">
+                                            <p>@Html.DisplayFor(modelItem => item.imageName)</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    }
+                </tr>
+                skip += col;
+                items = Model.Skip(skip).Take(col);
+            }
+        }
+    </table>
+</div>

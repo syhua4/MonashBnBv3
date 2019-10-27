@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "Rated";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .container{
+         margin-top: 70px;
+    }
+    .alert{
+        font-size:15px;
+        font-weight:bold;
+    }
+</style>
+<div class="container col-md-11">
+    <div class="alert alert-danger">
+        Sorry, you have already rated this booking!
+        Please try to rate another booking
+    </div>
+    @Html.ActionLink("View Reservations", "Index", "Reservations") | @Html.ActionLink("Back to index", "Index", "Rooms")
+</div>
+

@@ -1,7 +1,5 @@
 ﻿@model MonashBnBv3.Models.MailTemplate
-@Page validateRequest="false" 
 @{
-    ViewBag.Title = "SendMail";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
@@ -23,6 +21,9 @@
             cursor: pointer;
             background-color: #ee7c72;
             border: none;
+        }
+        .btn1{
+            margin-right:16px;
         }
 </style>
 @using (Html.BeginForm("SendMail", "Mail", FormMethod.Post, new { enctype = "multipart/form-data" }))
@@ -62,8 +63,12 @@
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="SendMail" class="btn btn-primary" />
+                    <div class="row">
+                        <input type="submit" value="SendMail" class="btn btn-primary btn1" />
+                        <input type="button" class="btn btn-primary" value="Back" onclick="location.href='@Url.Action("Index", "Mail")'" />
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -75,6 +80,9 @@
     $(document).ready(function () {
         if ('@ViewBag.Message' == 'Sent') {
             alert('Mail has been sent successfully');
+        }
+        if ('@ViewBag.Message' == 'isExe') {
+            alert('.exe files are not allowed');
         }
     });
 </script>

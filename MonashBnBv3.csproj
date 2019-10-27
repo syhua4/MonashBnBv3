@@ -27,7 +27,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <TypeScriptToolsVersion>3.5</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>3.6</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -37,6 +37,19 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>React</TypeScriptJSXEmit>
+    <TypeScriptModuleKind />
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -177,9 +190,12 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HotelsController.cs" />
     <Compile Include="Controllers\ImagesController.cs" />
     <Compile Include="Controllers\MailController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\RatingsController.cs" />
+    <Compile Include="Controllers\ReservationsController.cs" />
     <Compile Include="Controllers\RoomsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -208,10 +224,8 @@
     <Compile Include="Models\Image.cs">
       <DependentUpon>MonashBnB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Mail.cs">
-      <DependentUpon>MonashBnB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\MailList.cs" />
+    <Compile Include="Models\MailReceipientList.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MonashBnB.Context.cs">
       <AutoGen>True</AutoGen>
@@ -228,6 +242,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MonashBnB.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Rating.cs">
+      <DependentUpon>MonashBnB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Reservation.cs">
       <DependentUpon>MonashBnB.tt</DependentUpon>
     </Compile>
@@ -242,6 +259,10 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\Database1.mdf" />
+    <Content Include="App_Data\Database1_log.ldf">
+      <DependentUpon>Database1.mdf</DependentUpon>
+    </Content>
     <Content Include="Content\bootstrap-datepicker.css" />
     <Content Include="Content\bootstrap-datepicker.min.css" />
     <Content Include="Content\bootstrap-datepicker.standalone.css" />
@@ -292,6 +313,8 @@
     <Content Include="Content\bootstrap-datepicker3.css.map" />
     <Content Include="Content\bootstrap-datepicker.standalone.css.map" />
     <Content Include="Content\bootstrap-datepicker.css.map" />
+    <Content Include="Scripts\Chart.js" />
+    <Content Include="Scripts\Chart.min.js" />
     <Content Include="Scripts\esm\popper-utils.js" />
     <Content Include="Scripts\esm\popper-utils.min.js" />
     <Content Include="Scripts\esm\popper.js" />
@@ -300,6 +323,11 @@
     <Content Include="Scripts\esm\popper.js.map" />
     <Content Include="Scripts\esm\popper-utils.min.js.map" />
     <Content Include="Scripts\esm\popper-utils.js.map" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
     <EntityDeploy Include="Models\MonashBnB.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>MonashBnB.Designer.cs</LastGenOutput>
@@ -307,11 +335,6 @@
     <Content Include="Models\MonashBnB.edmx.diagram">
       <DependentUpon>MonashBnB.edmx</DependentUpon>
     </Content>
-    <Content Include="fonts\FontAwesome.otf" />
-    <Content Include="fonts\fontawesome-webfont.woff2" />
-    <Content Include="fonts\fontawesome-webfont.woff" />
-    <Content Include="fonts\fontawesome-webfont.ttf" />
-    <Content Include="fonts\fontawesome-webfont.eot" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -408,6 +431,10 @@
     <Content Include="Scripts\locales\bootstrap-datepicker.zh-TW.min.js" />
     <Content Include="Scripts\location.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\moment-with-locales.js" />
+    <Content Include="Scripts\moment-with-locales.min.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
@@ -578,7 +605,7 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Rooms\Create.cshtml" />
     <Content Include="Views\Rooms\Delete.cshtml" />
-    <Content Include="Views\Rooms\Details.cshtml" />
+    <Content Include="Views\Rooms\RoomInfo.cshtml" />
     <Content Include="Views\Rooms\Edit.cshtml" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
@@ -599,9 +626,29 @@
     <Content Include="Scripts\tinymce\skins\ui\oxide\fonts\tinymce-mobile.woff" />
     <Content Include="Scripts\tinymce\skins\ui\oxide-dark\fonts\tinymce-mobile.woff" />
     <Content Include="Scripts\tinymce\langs\readme.md" />
+    <Content Include="Views\Shared\_Admin.cshtml" />
+    <Content Include="Views\Hotels\Create.cshtml" />
+    <Content Include="Views\Hotels\Delete.cshtml" />
+    <Content Include="Views\Hotels\Edit.cshtml" />
+    <Content Include="Views\Hotels\Index.cshtml" />
+    <Content Include="Views\Images\Index.cshtml" />
+    <Content Include="Views\Images\Index2.cshtml" />
+    <Content Include="Views\Images\Edit.cshtml" />
+    <Content Include="Views\Images\Delete.cshtml" />
+    <Content Include="Views\Images\Createkn.cshtml" />
+    <Content Include="Views\Rooms\Details.cshtml" />
+    <Content Include="Views\Reservations\Create.cshtml" />
+    <Content Include="Views\Reservations\Delete.cshtml" />
+    <Content Include="Views\Reservations\Details.cshtml" />
+    <Content Include="Views\Reservations\Index.cshtml" />
+    <Content Include="Views\Ratings\CreateRating.cshtml" />
+    <Content Include="Views\Ratings\Index.cshtml" />
+    <Content Include="Views\Ratings\NoRating.cshtml" />
+    <Content Include="Views\Ratings\Rated.cshtml" />
+    <Content Include="Views\Reservations\Error.cshtml" />
+    <Content Include="Views\Ratings\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Uploads\" />
   </ItemGroup>
   <ItemGroup>

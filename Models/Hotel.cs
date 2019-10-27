@@ -11,29 +11,39 @@ namespace MonashBnBv3.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Hotel
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Hotel()
         {
             this.Rooms = new HashSet<Room>();
+            this.Images = new HashSet<Image>();
             this.Reservations = new HashSet<Reservation>();
+            this.Ratings = new HashSet<Rating>();
         }
     
         public int hotelId { get; set; }
+        [Required(ErrorMessage = "Hotel name is required")]
         public string hotelName { get; set; }
+        [Required(ErrorMessage = "Hotel address is required")]
         public string hotelAddress { get; set; }
         public string hotelDesc { get; set; }
-        public string hotelAmenties { get; set; }
+        [Required(ErrorMessage = "Latitude is required")]
+        [RegularExpression("^(\\+|-)?(?:90(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\\.[0-9]{1,6})?))$", ErrorMessage = "Latitude need to be formatted")]
         public decimal hotelLatitude { get; set; }
+        [Required(ErrorMessage = "Longitude is required")]
+        [RegularExpression("^(\\+|-)?(?:180(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\\.[0-9]{1,6})?))$", ErrorMessage = "Longitude need to be formatted")]
         public decimal hotelLongitude { get; set; }
-        public Nullable<int> imageId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Room> Rooms { get; set; }
-        public virtual Image Image { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Image> Images { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Reservation> Reservations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Rating> Ratings { get; set; }
     }
 }

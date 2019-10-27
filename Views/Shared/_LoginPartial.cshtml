@@ -24,43 +24,69 @@
 @using Microsoft.AspNet.Identity
 @if (Request.IsAuthenticated)
 {
-
-    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    var manager = new UserManager<MonashBnBv3.Models.ApplicationUser>(new Microsoft.AspNet.Identity.EntityFramework.UserStore<MonashBnBv3.Models.ApplicationUser>(new MonashBnBv3.Models.ApplicationDbContext()));
+    var user = manager.FindById(User.Identity.GetUserId());
+    if (user != null && manager.IsInRole(user.Id, "admin"))
     {
-        @Html.AntiForgeryToken()
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-                @*<ul class="navbar navbar-fixed-top navbar-right">*@
-                <li>
-                    @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
-                </li>
-                <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-            </ul>
-        </div>
+        using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-riUght" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    @*<li class="nav-item active">
+                        @Html.ActionLink("Manage User", "Index", "AspNetUser", routeValues: null, htmlAttributes: new { id = "registerLink" })
+                    </li>*@
+                    <li class="nav-item active">
+                        @Html.ActionLink("Manage Hotel & Room", "Index", "Hotels", routeValues: null, htmlAttributes: new { id = "hotelLink" })
+                    </li>
+                    <li class="nav-item active">
+                        @Html.ActionLink("Send Mail", "Index", "Mail", routeValues: null, htmlAttributes: new { id = "mailLink" })
+                    </li>
+                    @*<ul class="navbar navbar-fixed-top navbar-right">*@
+                    <li>
+                        @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+                    </li>
+                    <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                </ul>
+            </div>
+        }
+    }
+    else
+    {
+        using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-riUght" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        @Html.ActionLink("Manage Reservation", "Index", "Reservations", routeValues: null, htmlAttributes: new { id = "registerLink" })
+                    </li>
+                    <li class="nav-item active">
+                        @Html.ActionLink("View Past Ratings", "Index", "Ratings", routeValues: null, htmlAttributes: new { id = "registerLink" })
+                    </li>
+                    <li>
+                        @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+                    </li>
+                    <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                </ul>
+            </div>
+
+        }
     }
 }
 else
 {
     <div class="collapse navbar-collapse" id="navbarResponsive">
 
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item active">
-                @Html.ActionLink("Manage User", "xxx", "xxx", routeValues: null, htmlAttributes: new { id = "registerLink" })
-            </li>
-            <li class="nav-item active">
-                @Html.ActionLink("Manage Hotel & Room", "xxx", "xxx", routeValues: null, htmlAttributes: new { id = "registerLink" })
-            </li>
-            <li class="nav-item active">
-                @Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })
-            </li>
-            <li class="nav-item">
-                @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
-            </li>
-        </ul>
-    </div>
-    @*<div class="nav navbar-nav navbar-right">
-            @Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })
-            @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
-        </div>*@
-}
+    <ul class="navbar-nav ml-auto">
 
+        <li class="nav-item active">
+            @Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })
+        </li>
+        <li class="nav-item">
+            @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+        </li>
+    </ul>
+    </div>
+}

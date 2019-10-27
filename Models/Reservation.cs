@@ -14,6 +14,12 @@ namespace MonashBnBv3.Models
     
     public partial class Reservation
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Reservation()
+        {
+            this.Ratings = new HashSet<Rating>();
+        }
+    
         public int reserveId { get; set; }
         public System.DateTime reserveCheckIn { get; set; }
         public System.DateTime reserveCheckOut { get; set; }
@@ -25,5 +31,7 @@ namespace MonashBnBv3.Models
         public virtual AspNetUser AspNetUser { get; set; }
         public virtual Hotel Hotel { get; set; }
         public virtual Room Room { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Rating> Ratings { get; set; }
     }
 }

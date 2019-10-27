@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
 <style>
     * {
         box-sizing: border-box;
@@ -18,9 +19,9 @@
         width: 100%; /* Full width */
     }
 
-    .mapboxgl-map {
+    #map {
         position: fixed;
-        margin-top: 64px;
+        margin-top: 115px;
         top: 5px;
         bottom: 0;
         width: 40%;
@@ -29,10 +30,10 @@
     .search-again {
         position: fixed;
         margin-top: 64px;
-        top: 5px;
+        margin-left: 13px;
+        top: 10px;
         bottom: 0;
-        width: 38%;
-        z-index: 999;
+        width: 100%;
         left: 3px;
     }
 
@@ -63,21 +64,17 @@
 
     .btn-primary {
         cursor: pointer;
-        background-color: rgba(0, 0, 0, 0.36);
+        background-color: rgb(244, 154, 153);
         border: none;
+        box-shadow: 2px 2.5px 1.5px 0px rgba(0,0,0,0.075)
     }
 
         .btn-primary:hover {
             cursor: pointer;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: #ee7c72;
             border: none;
         }
 
-    .btn-icon .icon {
-        position: absolute;
-        right: 0;
-        display: block;
-    }
 
     .result-text {
         font-size: 20px;
@@ -85,99 +82,86 @@
         font-weight: 700;
     }
 </style>
+
 <div class="search-again">
-    <div class="row">
+    <button type="submit" class="btn btn-primary" onclick="location.href = '@Url.Action("Index","Rooms")'">
+        SEARCH AGAIN&nbsp;
+    </button>
 
-        <button type="submit" class="btn btn-primary">
-            SEARCH AGAIN&nbsp;
-            <span class="icon">
-                <i class="fa fa-search"></i>
-            </span>
-        </button>
 
-    </div>
 </div>
-<div id="map" class="mapboxgl-map sticky"></div>
+<div id="map"></div>
 <div class="container2 float-md-right col-12">
-    <div class="result-text">@ViewBag.FoundResults</div>
+    <div class="result-text ">@ViewBag.FoundResults</div>
     @foreach (var item in Model)
     {
         <div class="hotel-box col-12 row">
-            <div class="hotel-photo col-4">
-                @*<a href="garden-single.html" title="">
-                        <img src="upload/garden_sq_01.jpg" alt="" class="img-fluid">
-                        <div class="hovereffect"></div>
-                    </a>*@
-            </div><!-- end media -->
-
-            <div class="hotel-info col-8">
-                <span class="bg-aqua"><a href="garden-category.html" title="">Indoor</a></span>
-                <h4><a href="garden-single.html" title=""> @Html.DisplayFor(modelItem => item.Hotel.hotelName)</a></h4>
-                <p>@Html.DisplayFor(modelItem => item.Hotel.hotelDesc)</p>
-                @*<small><a href="garden-category.html" title=""><i class="fa fa-eye"></i> 1887</a></small>
-                    <small><a href="garden-single.html" title="">11 July, 2017</a></small>
-                    <small><a href="#" title="">by Matilda</a></small>*@
-            </div><!-- end meta -->
-        </div>
+            <div class="hotel-info" style="padding:30px;">
+                @* @ViewBag.imageList*@
+                @Html.ActionLink(item.Hotel.hotelName, "RoomInfo", new { @value = item.roomId})
+                <p style="margin-top:20px;">@Html.DisplayFor(modelItem => item.Hotel.hotelDesc)</p>
+                
+            </div>
+            </div>
     }
-</div>
+            </div>
 
 
 
 
-<table class="table" hidden>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Hotel.hotelName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Hotel.hotelDesc)
-        </th>
-        <th hidden>
-            @Html.DisplayNameFor(model => model.Hotel.hotelLatitude)
-        </th>
-        <th hidden>
-            @Html.DisplayNameFor(model => model.Hotel.hotelLongitude)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RoomType.roomTypeName)
-        </th>
+            <table class="table" hidden>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Hotel.hotelName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Hotel.hotelDesc)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Hotel.hotelLatitude)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Hotel.hotelLongitude)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.RoomType.roomTypeName)
+                    </th>
 
-        <th>
-            @Html.DisplayNameFor(model => model.roomPricePerNight)
-        </th>
-        <th></th>
-    </tr>
-    @foreach (var item in Model)
-    {
-        <tr class="coordinates">
-            <td class="description">
-                @Html.DisplayFor(modelItem => item.Hotel.hotelName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Hotel.hotelAddress)
-            </td>
-            <td class="latitude" hidden>
-                @Html.DisplayFor(modelItem => item.Hotel.hotelLatitude)
-            </td>
-            <td class="longitude" hidden>
-                @Html.DisplayFor(modelItem => item.Hotel.hotelLongitude)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RoomType.roomTypeName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.roomPricePerNight)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Hotel.imageId)
-            </td>
-        </tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.roomPricePerNight)
+                    </th>
+                    <th></th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr class="coordinates">
+                        <td>
+                            @*@Html.DisplayFor(modelItem => item.Hotel.Images.Where(x => x.hotelId.Equals(item.hotelId)))*@
+                        </td>
+                        <td class="description">
+                            @Html.DisplayFor(modelItem => item.Hotel.hotelName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Hotel.hotelAddress)
+                        </td>
+                        <td class="latitude">
+                            @Html.DisplayFor(modelItem => item.Hotel.hotelLatitude)
+                        </td>
+                        <td class="longitude">
+                            @Html.DisplayFor(modelItem => item.Hotel.hotelLongitude)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RoomType.roomTypeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.roomPricePerNight)
+                        </td>
 
-    }
+                    </tr>
 
-</table>
-@section Scripts {
-    @Scripts.Render("~/bundles/mapbox")
-}
-<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+                }
+
+            </table>
+            @section Scripts {
+                @Scripts.Render("~/bundles/mapbox")
+            }

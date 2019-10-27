@@ -21,6 +21,7 @@ namespace MonashBnBv3.Models
             this.AspNetUserLogins = new HashSet<AspNetUserLogin>();
             this.Reservations = new HashSet<Reservation>();
             this.AspNetRoles = new HashSet<AspNetRole>();
+            this.Ratings = new HashSet<Rating>();
         }
     
         public string Id { get; set; }
@@ -43,10 +44,11 @@ namespace MonashBnBv3.Models
         public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; }
-        public virtual Mail Mail { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Reservation> Reservations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AspNetRole> AspNetRoles { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Rating> Ratings { get; set; }
     }
 }
